@@ -1,4 +1,4 @@
-respawn
+Respawn
 =======
 
-#onegameamonth (January)
+Developed for onegameamonth (January) http://www.onegameamonth.com/devseer
