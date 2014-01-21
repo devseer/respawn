@@ -16,25 +16,25 @@ class Map
 	update: () ->
 
 	inBounds: (x, y) ->
-		return x > 0 && y > 0 && x <= @data.length && y <= @data[0].length
+		return x > 0 && y > 0 && x < @data.length && y < @data[0].length
 
 	canMove: (x, y) ->
 		return @inBounds(x, y) && @data[x][y] == '.'
 
 	updateViewport: (x, y) ->
-		@viewport.x = x - @viewport.width >> 1
-		@viewport.y = y - @viewport.height >> 1
+		@viewport.x = x - (@viewport.width >> 1)
+		@viewport.y = y - (@viewport.height >> 1)
 
 	draw: (handle) ->
 		output = ''
 		center =
-			x: @viewport.x + @viewport.width >> 1
-			y: @viewport.y + @viewport.height >> 1
+			x: @viewport.x + (@viewport.width >> 1)
+			y: @viewport.y + (@viewport.height >> 1)
 
-		for i in [@viewport.x...@viewport.x + @viewport.width]
-			for j in [@viewport.y...@viewport.y + @viewport.height]
+		for i in [@viewport.y...@viewport.y + @viewport.height]
+			for j in [@viewport.x...@viewport.x + @viewport.width]
 				if @inBounds(i, j)
-					output += ((i == center.x && j == center.y) && '@' || @data[i][j]) + ' '
+					output += ((j == center.x && i == center.y) && '@' || @data[j][i]) + ' '
 				else
 					output += '  '
 			output += '\n'

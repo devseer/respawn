@@ -75,7 +75,7 @@
     Map.prototype.update = function() {};
 
     Map.prototype.inBounds = function(x, y) {
-      return x > 0 && y > 0 && x <= this.data.length && y <= this.data[0].length;
+      return x > 0 && y > 0 && x < this.data.length && y < this.data[0].length;
     };
 
     Map.prototype.canMove = function(x, y) {
@@ -83,21 +83,21 @@
     };
 
     Map.prototype.updateViewport = function(x, y) {
-      this.viewport.x = x - this.viewport.width >> 1;
-      return this.viewport.y = y - this.viewport.height >> 1;
+      this.viewport.x = x - (this.viewport.width >> 1);
+      return this.viewport.y = y - (this.viewport.height >> 1);
     };
 
     Map.prototype.draw = function(handle) {
       var center, i, j, output, _i, _j, _ref, _ref1, _ref2, _ref3;
       output = '';
       center = {
-        x: this.viewport.x + this.viewport.width >> 1,
-        y: this.viewport.y + this.viewport.height >> 1
+        x: this.viewport.x + (this.viewport.width >> 1),
+        y: this.viewport.y + (this.viewport.height >> 1)
       };
-      for (i = _i = _ref = this.viewport.x, _ref1 = this.viewport.x + this.viewport.width; _ref <= _ref1 ? _i < _ref1 : _i > _ref1; i = _ref <= _ref1 ? ++_i : --_i) {
-        for (j = _j = _ref2 = this.viewport.y, _ref3 = this.viewport.y + this.viewport.height; _ref2 <= _ref3 ? _j < _ref3 : _j > _ref3; j = _ref2 <= _ref3 ? ++_j : --_j) {
+      for (i = _i = _ref = this.viewport.y, _ref1 = this.viewport.y + this.viewport.height; _ref <= _ref1 ? _i < _ref1 : _i > _ref1; i = _ref <= _ref1 ? ++_i : --_i) {
+        for (j = _j = _ref2 = this.viewport.x, _ref3 = this.viewport.x + this.viewport.width; _ref2 <= _ref3 ? _j < _ref3 : _j > _ref3; j = _ref2 <= _ref3 ? ++_j : --_j) {
           if (this.inBounds(i, j)) {
-            output += ((i === center.x && j === center.y) && '@' || this.data[i][j]) + ' ';
+            output += ((j === center.x && i === center.y) && '@' || this.data[j][i]) + ' ';
           } else {
             output += '  ';
           }
