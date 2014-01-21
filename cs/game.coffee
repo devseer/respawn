@@ -9,9 +9,11 @@ class Engine
 			bgm: bgm
 			sfx: sfx
 		@map = new Map()
+		@player = new Player()
 		@main(this)
 
 	update: () ->
+		@player.update(@map)
 		@map.update()
 
 	draw: (handle) ->
