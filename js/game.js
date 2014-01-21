@@ -44,7 +44,28 @@
 
   Map = (function() {
     function Map() {
-      this.data = [['.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.']];
+      var i, j;
+      this.height = 100;
+      this.width = 100;
+      this.viewport = {
+        x: 0,
+        y: 0
+      };
+      this.data = (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 0; 0 <= width ? _i < width : _i > width; i = 0 <= width ? ++_i : --_i) {
+          _results.push((function() {
+            var _j, _results1;
+            _results1 = [];
+            for (j = _j = 0; 0 <= height ? _j < height : _j > height; j = 0 <= height ? ++_j : --_j) {
+              _results1.push('.');
+            }
+            return _results1;
+          })());
+        }
+        return _results;
+      })();
     }
 
     Map.prototype.update = function() {};
@@ -55,7 +76,7 @@
       _ref = this.data;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tile = _ref[_i];
-        output += tile.join(' ') + '<br />';
+        output += tile.join(' ') + '\n';
       }
       return document.body.innerHTML = output;
     };
