@@ -44,12 +44,14 @@
 
   Map = (function() {
     function Map() {
-      var i, j;
-      this.height = 100;
-      this.width = 100;
+      var height, i, j, width;
+      height = 100;
+      width = 100;
       this.viewport = {
         x: 0,
-        y: 0
+        y: 0,
+        height: 9,
+        width: 9
       };
       this.data = (function() {
         var _i, _results;
@@ -71,12 +73,17 @@
     Map.prototype.update = function() {};
 
     Map.prototype.draw = function(handle) {
-      var output, tile, _i, _len, _ref;
+      var center, i, j, output, _i, _j, _ref, _ref1, _ref2, _ref3;
       output = '';
-      _ref = this.data;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        tile = _ref[_i];
-        output += tile.join(' ') + '\n';
+      center = {
+        x: this.viewport.x + this.viewport.width >> 1,
+        y: this.viewport.y + this.viewport.height >> 1
+      };
+      for (i = _i = _ref = this.viewport.x, _ref1 = this.viewport.x + this.viewport.width; _ref <= _ref1 ? _i < _ref1 : _i > _ref1; i = _ref <= _ref1 ? ++_i : --_i) {
+        for (j = _j = _ref2 = this.viewport.y, _ref3 = this.viewport.y + this.viewport.height; _ref2 <= _ref3 ? _j < _ref3 : _j > _ref3; j = _ref2 <= _ref3 ? ++_j : --_j) {
+          output += ((i === center.x && j === center.y) && '@' || this.data[i][j]) + ' ';
+        }
+        output += '\n';
       }
       return document.body.innerHTML = output;
     };
