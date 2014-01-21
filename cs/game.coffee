@@ -8,16 +8,18 @@ class Engine
 			canvas: canvas
 			bgm: bgm
 			sfx: sfx
-
+		@map = new Map()
 		@main(this)
 
 	update: () ->
+		@map.update()
 
-	draw: () ->
+	draw: (handle) ->
+		@map.draw(handle)
 
 	main: (c) ->
 		c.update()
-		c.draw()
+		c.draw(c.handle)
 
 		requestAnimationFrame(=> @main(c))
 
