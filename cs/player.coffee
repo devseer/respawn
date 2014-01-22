@@ -1,4 +1,5 @@
 class Player
+	canMove: true
 	keys: []
 
 	pos:
@@ -23,9 +24,21 @@ class Player
 		document.onkeyup = (e) ->
 			k[e.keyCode] = false
 
-	update: (map) ->
-		if @keys[@action.up] && map.canMove(@pos.x, @pos.y - 1) then @pos.y--
-		if @keys[@action.down] && map.canMove(@pos.x, @pos.y + 1) then @pos.y++
-		if @keys[@action.left] && map.canMove(@pos.x - 1, @pos.y) then @pos.x--
-		if @keys[@action.right] && map.canMove(@pos.x + 1, @pos.y) then @pos.x++
+	update: (map, timers) ->
+		last_x = @pos.x
+		last_y = @pos.y
+
+		if @canMove
+			if @keys[@action.up] && map.canMove(@pos.x, @pos.y - 1) then @pos.y--
+			if @keys[@action.down] && map.canMove(@pos.x, @pos.y + 1) then @pos.y++
+			if @keys[@action.left] && map.canMove(@pos.x - 1, @pos.y) then @pos.x--
+			if @keys[@action.right] && map.canMove(@pos.x + 1, @pos.y) then @pos.x++
+
+		if @pos.x != last_x || @pos.y != last_y
+			@canMove = false
+			timers.addTimer(200, () =>
+				@canMove = true
+				return false
+			)
+
 		map.updateViewport(@pos.x, @pos.y)

@@ -10,11 +10,13 @@ class Engine
 			sfx: sfx
 		@map = new Map()
 		@player = new Player()
+		@timers = new Timers()
 		@main(this)
 
 	update: () ->
-		@player.update(@map)
+		@player.update(@map, @timers)
 		@map.update()
+		@timers.update()
 
 	draw: (handle) ->
 		@map.draw(handle)
