@@ -11,10 +11,12 @@ class Engine
 		@map = new Map()
 		@player = new Player()
 		@timers = new Timers()
+		@mob = new Mob()
 		@main(this)
 
 	update: () ->
 		@player.update(@map, @timers)
+		@mob.update(@map, @timers)
 		@map.update()
 		@timers.update()
 

@@ -8,10 +8,10 @@ class Player
 
 	action:
 		attack: 32
-		up: 82
-		down: 72
-		left: 83
-		right: 84
+		up: 87
+		down: 83
+		left: 65
+		right: 68
 
 	constructor: (handle) ->
 		for i in [0..255]
