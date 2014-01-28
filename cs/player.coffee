@@ -35,6 +35,7 @@ class Player
 			if @keys[@action.right] && map.canMove(@pos.x + 1, @pos.y) then @pos.x++
 
 		if @pos.x != last_x || @pos.y != last_y
+			map.nextStep()
 			@canMove = false
 			timers.addTimer(200, () =>
 				@canMove = true

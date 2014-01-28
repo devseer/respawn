@@ -8,24 +8,21 @@ class Engine
 			canvas: canvas
 			bgm: bgm
 			sfx: sfx
-		@map = new Map()
-		@player = new Player()
+		@view = new View()
 		@timers = new Timers()
+
+		@player = new Player()
 		@mob = new Mob()
 		@main(this)
 
 	update: () ->
-		@player.update(@map, @timers)
-		@mob.update(@map, @timers)
-		@map.update()
+		@player.update(@view, @timers)
+		@mob.update(@view, @timers)
 		@timers.update()
-
-	draw: (handle) ->
-		@map.draw(handle)
 
 	main: (c) ->
 		c.update()
-		c.draw(c.handle)
+		c.view.draw(c.handle)
 
 		requestAnimationFrame(=> @main(c))
 

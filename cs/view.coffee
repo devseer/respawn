@@ -1,21 +1,23 @@
-class Map
+class View
 	list: []
+	step: true
 
 	constructor: () ->
 		@height = 100
 		@width = 100
-
 		@viewport =
 			x: 0
 			y: 0
 			height: 9
 			width: 9
+		@generate()
 
+	generate: ->
 		@data = for i in [0...@width]
 			for j in [0...@height]
-				Math.random() > 0.8 && '#' || '.'
-
-	update: () ->
+				'.'
+		for i in [0...5]
+			Math.random() * @width
 
 	inBounds: (x, y) ->
 		return x > 0 && y > 0 && x < @data.length && y < @data[0].length
@@ -27,7 +29,11 @@ class Map
 		@viewport.x = x - (@viewport.width >> 1)
 		@viewport.y = y - (@viewport.height >> 1)
 
-	inject: (mobs) ->
+	nextStep: () ->
+		@step = true
+		console.log('stepped')
+
+	updateMobs: (mobs) ->
 		@list = mobs
 
 	draw: (handle) ->
@@ -44,7 +50,7 @@ class Map
 					for m in @list
 						if m.pos.x == j && m.pos.y == i
 							other = true
-							output += m.icon
+							output += m.icon + ' '
 
 					if not other
 						output += ((j == center.x && i == center.y) && '@' || @data[j][i]) + ' '
