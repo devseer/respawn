@@ -79,8 +79,8 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         m = _ref[_i];
         nextPos = m.pos;
-        nextPos.x += Math.round(Math.random() - 1);
-        nextPos.y += Math.round(Math.random() - 1);
+        nextPos.x = this.randomDirection(nextPos.x);
+        nextPos.y = this.randomDirection(nextPos.y);
         if (view.canMove(nextPos.x, nextPos.y)) {
           _results.push(m.pos = nextPos);
         } else {
@@ -88,6 +88,10 @@
         }
       }
       return _results;
+    };
+
+    Mob.prototype.randomDirection = function(i) {
+      return (Math.floor(Math.random() * 2) === 0) && i + 1 || i - 1;
     };
 
     return Mob;

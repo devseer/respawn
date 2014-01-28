@@ -21,8 +21,11 @@ class Mob
 	updateMovement: (view) ->
 		for m in @list
 			nextPos = m.pos
-			nextPos.x += Math.round(Math.random() - 1)
-			nextPos.y += Math.round(Math.random() - 1)
+			nextPos.x = @randomDirection(nextPos.x)
+			nextPos.y = @randomDirection(nextPos.y)
 
 			if view.canMove(nextPos.x, nextPos.y)
 				m.pos = nextPos
+
+	randomDirection: (i) ->
+		return (Math.floor(Math.random() * 2) == 0) && i+1 || i-1
