@@ -22,7 +22,6 @@ class View
 			@generateLine('.', 0, Math.floor(Math.random() * @height))
 			@generateLine('.', Math.floor(Math.random() * @width), 0)
 
-
 	generateLine: (type, x, y) ->
 		for i in [0...@width]
 			for j in [0...@height]
@@ -34,6 +33,11 @@ class View
 
 	canMove: (x, y) ->
 		return @inBounds(x, y) && @data[x][y] == '.'
+
+	mobCollision: (x, y) ->
+		for m in @list
+			if x == m.pos.x && y == m.pos.y
+				console.log('player death')
 
 	updateViewport: (x, y) ->
 		@viewport.x = x - (@viewport.width >> 1)

@@ -37,6 +37,8 @@ class Player
 		if @pos.x != last_x || @pos.y != last_y
 			map.nextStep()
 			@canMove = false
+			map.mobCollision(@pos.x, @pos.y)
+
 			timers.addTimer(200, () =>
 				@canMove = true
 				return false

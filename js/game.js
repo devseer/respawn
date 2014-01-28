@@ -152,6 +152,7 @@
       if (this.pos.x !== last_x || this.pos.y !== last_y) {
         map.nextStep();
         this.canMove = false;
+        map.mobCollision(this.pos.x, this.pos.y);
         timers.addTimer(200, function() {
           _this.canMove = true;
           return false;
@@ -285,6 +286,21 @@
 
     View.prototype.canMove = function(x, y) {
       return this.inBounds(x, y) && this.data[x][y] === '.';
+    };
+
+    View.prototype.mobCollision = function(x, y) {
+      var m, _i, _len, _ref, _results;
+      _ref = this.list;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        m = _ref[_i];
+        if (x === m.pos.x && y === m.pos.y) {
+          _results.push(console.log('player death'));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
     };
 
     View.prototype.updateViewport = function(x, y) {
