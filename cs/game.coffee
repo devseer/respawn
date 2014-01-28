@@ -15,12 +15,13 @@ class Engine
 		@view.update(@objects)
 		@main(this)
 
-	update: () ->
-		@timer.update()
-		o.update(@view, @timer) for o in @objects
+	update: (c) ->
+		c.timer.update()
+		for k, v of c.objects
+			v.update(c.view, c.timer)
 
 	main: (c) ->
-		c.update()
+		c.update(c)
 		c.view.update(c.objects)
 		c.view.draw()
 

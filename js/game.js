@@ -19,21 +19,21 @@
       this.main(this);
     }
 
-    Engine.prototype.update = function() {
-      var o, _i, _len, _ref, _results;
-      this.timer.update();
-      _ref = this.objects;
+    Engine.prototype.update = function(c) {
+      var k, v, _ref, _results;
+      c.timer.update();
+      _ref = c.objects;
       _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        o = _ref[_i];
-        _results.push(o.update(this.view, this.timer));
+      for (k in _ref) {
+        v = _ref[k];
+        _results.push(v.update(c.view, c.timer));
       }
       return _results;
     };
 
     Engine.prototype.main = function(c) {
       var _this = this;
-      c.update();
+      c.update(c);
       c.view.update(c.objects);
       c.view.draw();
       return requestAnimationFrame(function() {
@@ -62,7 +62,6 @@
       if (view.step) {
         this.updateMovement(view);
         this.updatePopulation(view.width, view.height);
-        view.updateMobs(this.list);
         return view.step = false;
       }
     };
@@ -186,10 +185,8 @@
     function View() {
       this.wall = String.fromCharCode(0x2588);
       this.viewport = {
-        x: 0,
-        y: 0,
-        height: 9,
-        width: 9
+        width: 9,
+        height: 9
       };
     }
 
@@ -284,6 +281,8 @@
     Map.prototype.resource = function(store) {
       return store.map = this.data;
     };
+
+    Map.prototype.update = function() {};
 
     Map.prototype.newMap = function() {
       var i, j;

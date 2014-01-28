@@ -12,6 +12,8 @@ class Map
 	resource: (store) ->
 		store.map = @data
 
+	update: ->
+
 	newMap: ->
 		@data = for i in [0...@width]
 			for j in [0...@height]

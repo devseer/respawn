@@ -9,7 +9,6 @@ class Mob
 		if view.step
 			@updateMovement(view)
 			@updatePopulation(view.width, view.height)
-			view.updateMobs(@list)
 			view.step = false
 
 	updatePopulation: (width, height) ->

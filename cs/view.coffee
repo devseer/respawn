@@ -6,10 +6,9 @@ class View
 	constructor: () ->
 		@wall = String.fromCharCode(0x2588)
 		@viewport =
-			x: 0
-			y: 0
-			height: 9
 			width: 9
+			height: 9
+
 
 	inBounds: (x, y) ->
 		return x > 0 && y > 0 &&
