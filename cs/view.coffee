@@ -16,8 +16,18 @@ class View
 		@data = for i in [0...@width]
 			for j in [0...@height]
 				'.'
-		for i in [0...5]
-			Math.random() * @width
+		for i in [0...20]
+			@generateLine('#', 0, Math.floor(Math.random() * @height))
+			@generateLine('#', Math.floor(Math.random() * @width), 0)
+			@generateLine('.', 0, Math.floor(Math.random() * @height))
+			@generateLine('.', Math.floor(Math.random() * @width), 0)
+
+
+	generateLine: (type, x, y) ->
+		for i in [0...@width]
+			for j in [0...@height]
+				if i == x || j == y
+					@data[i][j] = type
 
 	inBounds: (x, y) ->
 		return x > 0 && y > 0 && x < @data.length && y < @data[0].length
@@ -31,7 +41,6 @@ class View
 
 	nextStep: () ->
 		@step = true
-		console.log('stepped')
 
 	updateMobs: (mobs) ->
 		@list = mobs

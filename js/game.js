@@ -250,8 +250,31 @@
         return _results;
       }).call(this);
       _results = [];
-      for (i = _i = 0; _i < 5; i = ++_i) {
-        _results.push(Math.random() * this.width);
+      for (i = _i = 0; _i < 20; i = ++_i) {
+        this.generateLine('#', 0, Math.floor(Math.random() * this.height));
+        this.generateLine('#', Math.floor(Math.random() * this.width), 0);
+        this.generateLine('.', 0, Math.floor(Math.random() * this.height));
+        _results.push(this.generateLine('.', Math.floor(Math.random() * this.width), 0));
+      }
+      return _results;
+    };
+
+    View.prototype.generateLine = function(type, x, y) {
+      var i, j, _i, _ref, _results;
+      _results = [];
+      for (i = _i = 0, _ref = this.width; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        _results.push((function() {
+          var _j, _ref1, _results1;
+          _results1 = [];
+          for (j = _j = 0, _ref1 = this.height; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+            if (i === x || j === y) {
+              _results1.push(this.data[i][j] = type);
+            } else {
+              _results1.push(void 0);
+            }
+          }
+          return _results1;
+        }).call(this));
       }
       return _results;
     };
@@ -270,8 +293,7 @@
     };
 
     View.prototype.nextStep = function() {
-      this.step = true;
-      return console.log('stepped');
+      return this.step = true;
     };
 
     View.prototype.updateMobs = function(mobs) {
