@@ -1,28 +1,28 @@
 root = exports ? this
 
 class Engine
-	handle: {}
+	objects: {}
 
 	constructor: (canvas, bgm, sfx) ->
-		@handle =
-			canvas: canvas
-			bgm: bgm
-			sfx: sfx
 		@view = new View()
-		@timers = new Timers()
+		@timer = new Timer()
 
-		@player = new Player()
-		@mob = new Mob()
+		@objects =
+			map: new Map(100, 100)
+			player: new Player()
+			mob: new Mob()
+
+		@view.update(@objects)
 		@main(this)
 
 	update: () ->
-		@player.update(@view, @timers)
-		@mob.update(@view, @timers)
-		@timers.update()
+		@timer.update()
+		o.update(@view, @timer) for o in @objects
 
 	main: (c) ->
 		c.update()
-		c.view.draw(c.handle)
+		c.view.update(c.objects)
+		c.view.draw()
 
 		requestAnimationFrame(=> @main(c))
 

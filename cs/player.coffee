@@ -7,7 +7,6 @@ class Player
 		y: 20
 
 	action:
-		attack: 32
 		up: 87
 		down: 83
 		left: 65
@@ -24,24 +23,24 @@ class Player
 		document.onkeyup = (e) ->
 			k[e.keyCode] = false
 
-	update: (map, timers) ->
+	resource: (store) ->
+		store.pos = @pos
+
+	update: (view, timers) ->
 		last_x = @pos.x
 		last_y = @pos.y
 
 		if @canMove
-			if @keys[@action.up] && map.canMove(@pos.x, @pos.y - 1) then @pos.y--
-			if @keys[@action.down] && map.canMove(@pos.x, @pos.y + 1) then @pos.y++
-			if @keys[@action.left] && map.canMove(@pos.x - 1, @pos.y) then @pos.x--
-			if @keys[@action.right] && map.canMove(@pos.x + 1, @pos.y) then @pos.x++
+			if @keys[@action.up] && view.canMove(@pos.x, @pos.y - 1) then @pos.y--
+			if @keys[@action.down] && view.canMove(@pos.x, @pos.y + 1) then @pos.y++
+			if @keys[@action.left] && view.canMove(@pos.x - 1, @pos.y) then @pos.x--
+			if @keys[@action.right] && view.canMove(@pos.x + 1, @pos.y) then @pos.x++
 
 		if @pos.x != last_x || @pos.y != last_y
-			map.nextStep()
 			@canMove = false
-			map.mobCollision(@pos.x, @pos.y)
+			view.nextStep()
 
 			timers.addTimer(200, () =>
 				@canMove = true
 				return false
 			)
-
-		map.updateViewport(@pos.x, @pos.y)

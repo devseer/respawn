@@ -1,4 +1,4 @@
-class Timers
+class Timer
 	timestamp: 0
 	list: []
 	constructor: () ->

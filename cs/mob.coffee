@@ -2,6 +2,9 @@ class Mob
 	list: []
 	constructor: ->
 
+	resource: (store) ->
+		store.mob = @list
+
 	update: (view, timers) ->
 		if view.step
 			@updateMovement(view)
@@ -28,4 +31,4 @@ class Mob
 				m.pos = nextPos
 
 	randomDirection: (i) ->
-		return (Math.floor(Math.random() * 2) == 0) && i+1 || i-1
+		return Math.floor(Math.random() * 2) && i+1 || i-1
