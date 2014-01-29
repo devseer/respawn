@@ -4,11 +4,10 @@ class View
 	resource: {}
 
 	constructor: () ->
-		@wall = String.fromCharCode(0x2588)
+		@wall = String.fromCharCode(9608)
 		@viewport =
 			width: 9
 			height: 9
-
 
 	inBounds: (x, y) ->
 		return x > 0 && y > 0 &&
@@ -16,12 +15,8 @@ class View
 			y < @resource.map[0].length
 
 	canMove: (x, y) ->
-		return @inBounds(x, y) && @resource.map[x][y]
-
-	mobCollision: (x, y) ->
-		for m in @list
-			if x == m.pos.x && y == m.pos.y
-				console.log('player death')
+		true
+#return @inBounds(x, y) && @resource.map[x][y]
 
 	nextStep: () ->
 		@step = true

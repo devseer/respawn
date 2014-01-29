@@ -49,6 +49,154 @@
     root.Game = Engine;
   }
 
+  Map = (function() {
+    Map.width = 0;
+
+    Map.height = 0;
+
+    Map.data = [];
+
+    function Map(width, height) {
+      this.width = width;
+      this.height = height;
+      this.newMap();
+      this.generate();
+    }
+
+    Map.prototype.resource = function(store) {
+      return store.map = this.data;
+    };
+
+    Map.prototype.update = function() {};
+
+    Map.prototype.newMap = function() {
+      var i, j;
+      return this.data = (function() {
+        var _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = this.width; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+          _results.push((function() {
+            var _j, _ref1, _results1;
+            _results1 = [];
+            for (j = _j = 0, _ref1 = this.height; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+              _results1.push(false);
+            }
+            return _results1;
+          }).call(this));
+        }
+        return _results;
+      }).call(this);
+    };
+
+    Map.prototype.generate = function() {
+      var grid, i, j, neighbour, next, room, size, _i;
+      size = {
+        width: 7,
+        height: 7
+      };
+      grid = {
+        width: Math.floor(this.width / size.width),
+        height: Math.floor(this.height / size.height)
+      };
+      room = (function() {
+        var _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = grid.width; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+          _results.push((function() {
+            var _j, _ref1, _results1;
+            _results1 = [];
+            for (j = _j = 0, _ref1 = grid.height; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+              _results1.push([]);
+            }
+            return _results1;
+          })());
+        }
+        return _results;
+      })();
+      next = this.reroll(grid);
+      for (i = _i = 0; _i < 64; i = ++_i) {
+        neighbour = this.randomNeighbour(next);
+        if (this.boundsCheck(neighbour, grid)) {
+          room[next.x][next.y].push(neighbour);
+          next = neighbour;
+        } else {
+          next = this.reroll(grid);
+        }
+      }
+      return this.fillCells(grid, size, room);
+    };
+
+    Map.prototype.reroll = function(dimensions) {
+      return {
+        x: Math.floor(Math.random() * dimensions.width),
+        y: Math.floor(Math.random() * dimensions.height)
+      };
+    };
+
+    Map.prototype.fillCells = function(dimensions, size, room) {
+      var i, j, _i, _ref, _results;
+      _results = [];
+      for (i = _i = 0, _ref = dimensions.width - 1; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        _results.push((function() {
+          var _j, _ref1, _results1;
+          _results1 = [];
+          for (j = _j = 0, _ref1 = dimensions.height - 1; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+            if (room[i][j].length) {
+              _results1.push(this.fillRoom(i * size.width, j * size.height, size.width, size.height));
+            } else {
+              _results1.push(void 0);
+            }
+          }
+          return _results1;
+        }).call(this));
+      }
+      return _results;
+    };
+
+    Map.prototype.fillRoom = function(x, y, width, height) {
+      var i, j, pheight, pwidth, px, py, _i, _results;
+      px = x + 1;
+      py = y + 1;
+      pwidth = x + width - 1;
+      pheight = y + height - 1;
+      _results = [];
+      for (i = _i = px; px <= pwidth ? _i < pwidth : _i > pwidth; i = px <= pwidth ? ++_i : --_i) {
+        _results.push((function() {
+          var _j, _results1;
+          _results1 = [];
+          for (j = _j = py; py <= pheight ? _j < pheight : _j > pheight; j = py <= pheight ? ++_j : --_j) {
+            _results1.push(this.data[i][j] = true);
+          }
+          return _results1;
+        }).call(this));
+      }
+      return _results;
+    };
+
+    Map.prototype.boundsCheck = function(pos, area) {
+      return pos.x > 0 && pos.x < area.width && pos.y > 0 && pos.y < area.height;
+    };
+
+    Map.prototype.randomNeighbour = function(pos) {
+      var neighbour;
+      if (Math.floor(Math.random() * 2)) {
+        neighbour = {
+          x: pos.x,
+          y: pos.y + (Math.floor(Math.random() * 2) && 1 || -1)
+        };
+      } else {
+        neighbour = {
+          x: pos.x + (Math.floor(Math.random() * 2) && 1 || -1),
+          y: pos.y
+        };
+      }
+      return neighbour;
+    };
+
+    return Map;
+
+  })();
+
   Mob = (function() {
     Mob.prototype.list = [];
 
@@ -175,6 +323,57 @@
 
   })();
 
+  Timer = (function() {
+    Timer.prototype.timestamp = 0;
+
+    Timer.prototype.list = [];
+
+    function Timer() {
+      this.updateTime();
+    }
+
+    Timer.prototype.update = function() {
+      var i, _results;
+      this.updateTime();
+      _results = [];
+      for (i in this.list) {
+        if (this.list[i].time < this.timestamp) {
+          _results.push(this.executeTimer(this.list[i], i));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    Timer.prototype.addTimer = function(interval, callback) {
+      return this.list.push({
+        interval: interval,
+        time: this.timestamp + interval,
+        callback: callback
+      });
+    };
+
+    Timer.prototype.executeTimer = function(timer, index) {
+      if (timer.callback()) {
+        return this.renewTimer(timer);
+      } else {
+        return this.list.splice(index, 1);
+      }
+    };
+
+    Timer.prototype.renewTimer = function(timer) {
+      return timer.time = timer.interval + this.timestamp;
+    };
+
+    Timer.prototype.updateTime = function() {
+      return this.timestamp = new Date().getTime();
+    };
+
+    return Timer;
+
+  })();
+
   View = (function() {
     View.prototype.step = true;
 
@@ -183,7 +382,7 @@
     View.prototype.resource = {};
 
     function View() {
-      this.wall = String.fromCharCode(0x2588);
+      this.wall = String.fromCharCode(9608);
       this.viewport = {
         width: 9,
         height: 9
@@ -195,22 +394,7 @@
     };
 
     View.prototype.canMove = function(x, y) {
-      return this.inBounds(x, y) && this.resource.map[x][y];
-    };
-
-    View.prototype.mobCollision = function(x, y) {
-      var m, _i, _len, _ref, _results;
-      _ref = this.list;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        m = _ref[_i];
-        if (x === m.pos.x && y === m.pos.y) {
-          _results.push(console.log('player death'));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
+      return true;
     };
 
     View.prototype.nextStep = function() {
@@ -261,111 +445,6 @@
     };
 
     return View;
-
-  })();
-
-  Map = (function() {
-    Map.height = 0;
-
-    Map.width = 0;
-
-    Map.data = [];
-
-    function Map(width, height) {
-      this.height = height;
-      this.width = width;
-      this.newMap();
-      this.generate();
-    }
-
-    Map.prototype.resource = function(store) {
-      return store.map = this.data;
-    };
-
-    Map.prototype.update = function() {};
-
-    Map.prototype.newMap = function() {
-      var i, j;
-      return this.data = (function() {
-        var _i, _ref, _results;
-        _results = [];
-        for (i = _i = 0, _ref = this.width; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-          _results.push((function() {
-            var _j, _ref1, _results1;
-            _results1 = [];
-            for (j = _j = 0, _ref1 = this.height; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
-              _results1.push(false);
-            }
-            return _results1;
-          }).call(this));
-        }
-        return _results;
-      }).call(this);
-    };
-
-    Map.prototype.generate = function() {
-      var i, x, y, _i, _results;
-      _results = [];
-      for (i = _i = 0; _i < 3000; i = ++_i) {
-        x = Math.floor(Math.random() * this.width);
-        y = Math.floor(Math.random() * this.height);
-        _results.push(this.data[x][y] = true);
-      }
-      return _results;
-    };
-
-    return Map;
-
-  })();
-
-  Timer = (function() {
-    Timer.prototype.timestamp = 0;
-
-    Timer.prototype.list = [];
-
-    function Timer() {
-      this.updateTime();
-    }
-
-    Timer.prototype.update = function() {
-      var i, _results;
-      this.updateTime();
-      _results = [];
-      for (i in this.list) {
-        if (this.list[i].time < this.timestamp) {
-          _results.push(this.executeTimer(this.list[i], i));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
-    };
-
-    Timer.prototype.addTimer = function(interval, callback) {
-      return this.list.push({
-        interval: interval,
-        time: this.timestamp + interval,
-        callback: callback
-      });
-    };
-
-    Timer.prototype.executeTimer = function(timer, index) {
-      if (timer.callback()) {
-        return this.renewTimer(timer);
-      } else {
-        return this.list.splice(index, 1);
-      }
-    };
-
-    Timer.prototype.renewTimer = function(timer) {
-      return timer.time = timer.interval + this.timestamp;
-    };
-
-    Timer.prototype.updateTime = function() {
-      return this.timestamp = new Date().getTime();
-    };
-
-    return Timer;
 
   })();
 
