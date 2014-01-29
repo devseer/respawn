@@ -91,8 +91,8 @@
     Map.prototype.generate = function() {
       var grid, i, j, neighbour, next, room, size, _i;
       size = {
-        width: 7,
-        height: 7
+        width: 9,
+        height: 9
       };
       grid = {
         width: Math.floor(this.width / size.width),
@@ -142,7 +142,8 @@
           _results1 = [];
           for (j = _j = 0, _ref1 = dimensions.height - 1; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
             if (room[i][j].length) {
-              _results1.push(this.fillRoom(i * size.width, j * size.height, size.width, size.height));
+              this.fillRoom(i * size.width, j * size.height, size.width, size.height);
+              _results1.push(this.fillPath(i * size.width, j * size.height, room[i][j][0].x * size.width, room[i][j][0].y * size.height, size.width, size.height));
             } else {
               _results1.push(void 0);
             }
@@ -154,11 +155,12 @@
     };
 
     Map.prototype.fillRoom = function(x, y, width, height) {
-      var i, j, pheight, pwidth, px, py, _i, _results;
-      px = x + 1;
-      py = y + 1;
-      pwidth = x + width - 1;
-      pheight = y + height - 1;
+      var i, j, pheight, pwidth, px, py, scale, _i, _results;
+      scale = Math.floor(Math.random() * 3) + 1;
+      px = x + scale;
+      py = y + scale;
+      pwidth = x + width - scale;
+      pheight = y + height - scale;
       _results = [];
       for (i = _i = px; px <= pwidth ? _i < pwidth : _i > pwidth; i = px <= pwidth ? ++_i : --_i) {
         _results.push((function() {
@@ -171,6 +173,25 @@
         }).call(this));
       }
       return _results;
+    };
+
+    Map.prototype.fillPath = function(fx, fy, tx, ty, width, height) {
+      var i, offsetheight, offsetwidth, _i, _j, _results, _results1;
+      offsetwidth = Math.floor(width / 2);
+      offsetheight = Math.floor(height / 2);
+      if (fx === tx) {
+        _results = [];
+        for (i = _i = fy; fy <= ty ? _i < ty : _i > ty; i = fy <= ty ? ++_i : --_i) {
+          _results.push(this.data[fx + offsetwidth][i + offsetheight] = true);
+        }
+        return _results;
+      } else {
+        _results1 = [];
+        for (i = _j = fx; fx <= tx ? _j < tx : _j > tx; i = fx <= tx ? ++_j : --_j) {
+          _results1.push(this.data[i + offsetwidth][fy + offsetheight] = true);
+        }
+        return _results1;
+      }
     };
 
     Map.prototype.boundsCheck = function(pos, area) {

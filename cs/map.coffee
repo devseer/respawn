@@ -21,8 +21,8 @@ class Map
 
 	generate: ->
 		size =
-			width: 7
-			height: 7
+			width: 9
+			height: 9
 
 		grid =
 			width: Math.floor(@width / size.width)
@@ -35,9 +35,6 @@ class Map
 		next = @reroll(grid)
 
 		for i in [0...64]
-			#if room[next.x][next.y].length > 0
-			#	next = @reroll(grid)
-			#else
 			neighbour = @randomNeighbour(next)
 			if @boundsCheck(neighbour, grid)
 				room[next.x][next.y].push(neighbour)
@@ -56,15 +53,33 @@ class Map
 			for j in [0...dimensions.height - 1]
 				if room[i][j].length
 					@fillRoom(i * size.width, j * size.height, size.width, size.height)
+					@fillPath(
+						i * size.width, j * size.height,
+						room[i][j][0].x * size.width, room[i][j][0].y * size.height,
+						size.width, size.height
+					)
 
 	fillRoom: (x, y, width, height) ->
-		px = x + 1
-		py = y + 1
-		pwidth = x + width - 1
-		pheight = y + height - 1
+		scale = Math.floor(Math.random() * 3) + 1
+		px = x + scale
+		py = y + scale
+		pwidth = x + width - scale
+		pheight = y + height - scale
+
 		for i in [px...pwidth]
 			for j in [py...pheight]
 				@data[i][j] = true
+
+	fillPath: (fx, fy, tx, ty, width, height) ->
+		offsetwidth = Math.floor(width / 2)
+		offsetheight = Math.floor(height / 2)
+
+		if fx == tx
+			for i in [fy...ty]
+				@data[fx + offsetwidth][i + offsetheight] = true
+		else
+			for i in [fx...tx]
+				@data[i + offsetwidth][fy + offsetheight] = true
 
 	boundsCheck: (pos, area) ->
 		return pos.x > 0 && pos.x < area.width && pos.y > 0 && pos.y < area.height
