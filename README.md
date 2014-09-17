@@ -1,11 +1,6 @@
 Respawn
 =======
 
-Developed for onegameamonth (January) http://www.onegameamonth.com/devseer
-
-Design Document
-=======
-Outline
 * Roguelike adventure
 * No weapons, only stealth
 * Reach respawn points without dying
